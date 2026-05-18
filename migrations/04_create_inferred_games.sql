@@ -7,6 +7,6 @@ CREATE TABLE inferred_games (
     rating_delta        int,
     rank_before         int,
     rank_after          int,
-    observed_at         timestamptz,
+    observed_at         timestamptz DEFAULT now(),
     estimated_placement numeric
 );

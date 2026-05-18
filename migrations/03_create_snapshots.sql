@@ -4,5 +4,5 @@ CREATE TABLE snapshots (
     season_id     int references seasons(id),
     rank          int,
     rating        int,
-    captured_at   timestamptz
+    captured_at   timestamptz DEFAULT now()
 );
