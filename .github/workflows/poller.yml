@@ -1,0 +1,5 @@
+name: poller
+
+on:
+  schedule:
+    - cron: */15 * * * *
