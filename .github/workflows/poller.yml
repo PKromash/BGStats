@@ -1,0 +1,19 @@
+name: poller
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+      - run: pip install -r requirements.txt
+      - run: python main.py
+        env:
+          DATABASE_URL: ${{secrets.DATABASE_URL}}
