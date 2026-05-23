@@ -4,7 +4,7 @@ import type { PlayerSearchResult, GameHistoryRow, PlayerStats, LeaderboardRow } 
 
 export async function searchPlayers(prefix: string, limit = 10): Promise<PlayerSearchResult[]> {
   const rows = await sql`
-    SELECT id, player_name, last_seen_at
+    SELECT id::int, player_name, last_seen_at
     FROM players
     WHERE player_name LIKE ${prefix + '%'}
     ORDER BY player_name
@@ -16,7 +16,7 @@ export async function searchPlayers(prefix: string, limit = 10): Promise<PlayerS
 export async function getPlayerHistory(playerName: string, seasonId = 18): Promise<GameHistoryRow[]> {
   const rows = await sql`
     SELECT ig.observed_at, ig.rating_before, ig.rating_after, ig.rating_delta,
-           ig.estimated_placement
+           ig.estimated_placement::float
     FROM inferred_games ig
     JOIN players p ON p.id = ig.player_id
     WHERE p.player_name = ${playerName}
