@@ -39,7 +39,7 @@ export async function getPlayerStats(playerName: string, seasonId = 18): Promise
       ROUND(AVG(ig.rating_delta), 2)::float                                AS avg_rating_delta,
       MAX(ig.rating_after)::int                                             AS peak_rating,
       (
-        SELECT ig2.rating_after
+        SELECT ig2.rating_after::int
         FROM inferred_games ig2
         JOIN players p2 ON p2.id = ig2.player_id
         WHERE p2.player_name = ${playerName} AND ig2.season_id = ${seasonId}
@@ -47,7 +47,7 @@ export async function getPlayerStats(playerName: string, seasonId = 18): Promise
         LIMIT 1
       )                                                                     AS current_rating,
       (
-        SELECT ig2.rank_after
+        SELECT ig2.rank_after::int
         FROM inferred_games ig2
         JOIN players p2 ON p2.id = ig2.player_id
         WHERE p2.player_name = ${playerName} AND ig2.season_id = ${seasonId}
@@ -85,7 +85,7 @@ export async function getLeaderboard(seasonId = 18, limit = 100): Promise<Leader
       l.rank,
       p.player_name,
       l.rating,
-      (l.rating - d.rating_24h_ago) AS rating_delta_24h
+      (l.rating - d.rating_24h_ago)::int AS rating_delta_24h
     FROM latest l
     JOIN players p ON p.id = l.player_id
     LEFT JOIN day_ago d ON d.player_id = l.player_id
