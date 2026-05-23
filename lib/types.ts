@@ -18,8 +18,8 @@ export interface PlayerStats {
   first_place_pct: number
   avg_rating_delta: number
   peak_rating: number
-  current_rating: number
-  current_rank: number
+  current_rating: number | null
+  current_rank: number | null
 }
 
 export interface LeaderboardRow {

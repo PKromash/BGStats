@@ -3,10 +3,11 @@ import { sql } from './db'
 import type { PlayerSearchResult, GameHistoryRow, PlayerStats, LeaderboardRow } from './types'
 
 export async function searchPlayers(prefix: string, limit = 10): Promise<PlayerSearchResult[]> {
+  const safePrefix = prefix.replace(/[%_\\]/g, c => '\\' + c)
   const rows = await sql`
     SELECT id::int, player_name, last_seen_at
     FROM players
-    WHERE player_name LIKE ${prefix + '%'}
+    WHERE player_name LIKE ${safePrefix + '%'} ESCAPE '\\'
     ORDER BY player_name
     LIMIT ${limit}
   `
