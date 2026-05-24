@@ -19,10 +19,11 @@ export default function PlacementChart({ data }: { data: PlacementDistributionRo
           contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '4px' }}
           labelStyle={{ color: '#e5e7eb' }}
           itemStyle={{ color: '#60a5fa' }}
-          formatter={(value: number) => [value, 'Games']}
-          labelFormatter={(label: number) => {
-            const suffix = label === 1 ? 'st' : label === 2 ? 'nd' : label === 3 ? 'rd' : 'th'
-            return `${label}${suffix} place`
+          formatter={(value) => [Number(value), 'Games']}
+          labelFormatter={(label) => {
+            const n = Number(label)
+            const suffix = n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th'
+            return `${n}${suffix} place`
           }}
         />
         <Bar dataKey="count" fill="#3b82f6" radius={[2, 2, 0, 0]} />

@@ -30,7 +30,7 @@ export default function RatingHistoryChart({ data }: { data: GameHistoryRow[] })
           contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '4px' }}
           labelStyle={{ color: '#e5e7eb' }}
           itemStyle={{ color: '#60a5fa' }}
-          formatter={(value: number) => [value, 'Rating']}
+          formatter={(value) => [Number(value), 'Rating']}
         />
         <Line
           type="monotone"
