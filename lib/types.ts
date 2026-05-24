@@ -28,3 +28,10 @@ export interface LeaderboardRow {
   rating: number
   rating_delta_24h: number | null
 }
+
+export type StatsWindow = '7d' | '30d' | 'season'
+
+export interface PlacementDistributionRow {
+  placement: number
+  count: number
+}
