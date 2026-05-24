@@ -89,8 +89,8 @@ When the user changes the window, `WindowSelector` calls `router.replace` with t
 ### RatingHistoryChart (`components/RatingHistoryChart.tsx`) — client
 
 - Receives `GameHistoryRow[]` as props
-- Renders a Recharts `LineChart` with `observed_at` on X axis, `rating_after` on Y axis
-- Always shows full season history (history endpoint has no window filter)
+- Renders a Recharts `LineChart` with `observed_at` on X axis (formatted as `MM/DD`), `rating_after` on Y axis
+- Always shows full season history (history endpoint has no window filter — ignores the active window)
 - Empty array renders a "No game history" message
 
 ---
