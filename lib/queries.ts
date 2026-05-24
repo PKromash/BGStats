@@ -51,6 +51,7 @@ export async function getPlayerStats(
           )::float                                                              AS first_place_pct,
           ROUND(AVG(ig.rating_delta), 2)::float                                AS avg_rating_delta,
           MAX(ig.rating_after)::int                                             AS peak_rating,
+          -- peak_rating above is window-scoped; current_rating and current_rank below are always season-wide
           (
             SELECT ig2.rating_after::int
             FROM inferred_games ig2
