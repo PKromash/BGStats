@@ -28,7 +28,7 @@ describe('GET /api/players/[name]/stats', () => {
     const res = await GET(req, makeParams('trumpsc'))
     expect(res.status).toBe(200)
     expect(await res.json()).toEqual(sampleStats)
-    expect(mockGetPlayerStats).toHaveBeenCalledWith('trumpsc', 18)
+    expect(mockGetPlayerStats).toHaveBeenCalledWith('trumpsc', 18, 'season')
   })
 
   it('returns 404 when player not found', async () => {
@@ -43,7 +43,7 @@ describe('GET /api/players/[name]/stats', () => {
     mockGetPlayerStats.mockResolvedValue(null)
     const req = new Request('http://localhost/api/players/trumpsc/stats?season=17')
     await GET(req, makeParams('trumpsc'))
-    expect(mockGetPlayerStats).toHaveBeenCalledWith('trumpsc', 17)
+    expect(mockGetPlayerStats).toHaveBeenCalledWith('trumpsc', 17, 'season')
   })
 
   it('returns 500 on DB error', async () => {
@@ -52,5 +52,28 @@ describe('GET /api/players/[name]/stats', () => {
     const res = await GET(req, makeParams('trumpsc'))
     expect(res.status).toBe(500)
     expect(await res.json()).toEqual({ error: 'internal server error' })
+  })
+
+  it('passes window=7d to getPlayerStats', async () => {
+    mockGetPlayerStats.mockResolvedValue(sampleStats)
+    const req = new Request('http://localhost/api/players/trumpsc/stats?window=7d')
+    const res = await GET(req, makeParams('trumpsc'))
+    expect(res.status).toBe(200)
+    expect(mockGetPlayerStats).toHaveBeenCalledWith('trumpsc', 18, '7d')
+  })
+
+  it('passes window=30d to getPlayerStats', async () => {
+    mockGetPlayerStats.mockResolvedValue(sampleStats)
+    const req = new Request('http://localhost/api/players/trumpsc/stats?window=30d')
+    const res = await GET(req, makeParams('trumpsc'))
+    expect(res.status).toBe(200)
+    expect(mockGetPlayerStats).toHaveBeenCalledWith('trumpsc', 18, '30d')
+  })
+
+  it('defaults invalid window to season', async () => {
+    mockGetPlayerStats.mockResolvedValue(sampleStats)
+    const req = new Request('http://localhost/api/players/trumpsc/stats?window=invalid')
+    await GET(req, makeParams('trumpsc'))
+    expect(mockGetPlayerStats).toHaveBeenCalledWith('trumpsc', 18, 'season')
   })
 })
