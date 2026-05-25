@@ -111,7 +111,7 @@ export async function getPlayerStats(
   return rows[0] as PlayerStats
 }
 
-export async function getLeaderboard(seasonId = 18, limit = 100): Promise<LeaderboardRow[]> {
+export async function getLeaderboard(seasonId = 18, limit = 100, offset = 0): Promise<LeaderboardRow[]> {
   const rows = await sql`
     WITH latest AS (
       SELECT DISTINCT ON (player_id)
@@ -137,9 +137,39 @@ export async function getLeaderboard(seasonId = 18, limit = 100): Promise<Leader
     JOIN players p ON p.id = l.player_id
     LEFT JOIN day_ago d ON d.player_id = l.player_id
     ORDER BY l.rank ASC
-    LIMIT ${limit}
+    LIMIT ${limit} OFFSET ${offset}
   `
   return rows as LeaderboardRow[]
+}
+
+export async function getLeaderboardCount(seasonId = 18): Promise<number> {
+  const rows = await sql`
+    SELECT COUNT(DISTINCT player_id)::int AS count
+    FROM snapshots
+    WHERE season_id = ${seasonId}
+  `
+  return (rows[0] as { count: number }).count
+}
+
+export async function getLatestSnapshot(
+  playerName: string,
+  seasonId = 18
+): Promise<{ current_rating: number; current_rank: number | null } | null> {
+  const rows = await sql`
+    SELECT DISTINCT ON (p.id)
+      s.rating::int AS current_rating,
+      s.rank::int   AS current_rank
+    FROM snapshots s
+    JOIN players p ON p.id = s.player_id
+    WHERE p.player_name = ${playerName}
+      AND s.season_id = ${seasonId}
+    ORDER BY p.id, s.captured_at DESC
+  `
+  if (!rows[0]) return null
+  return {
+    current_rating: rows[0].current_rating as number,
+    current_rank: rows[0].current_rank as number | null,
+  }
 }
 
 export async function getPlacementDistribution(
