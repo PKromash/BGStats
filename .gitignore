@@ -21,6 +21,13 @@
 .superpowers/
 *.pem
 
+# markdown (README is the only tracked .md)
+*.md
+!README.md
+
+# internal docs
+docs/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
